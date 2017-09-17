@@ -8,12 +8,4 @@ class Card
     @rank = rank
     @suit = suit
   end
-
-  def greater_than?(other)
-    RANKS.index(self.rank) > RANKS.index(other.rank)
-  end
-
-  def ==(other)
-    self.rank == other.rank && self.suit == other.suit
-  end
 end
