@@ -4,19 +4,7 @@ require_relative "deck"
 require_relative "card"
 require_relative "hand"
 
-# def get_yes_or_no
-#   # loop until you get a good answer and return
-#   while true
-#     print "Please enter (y)es or (n)o: "
-#     answer = gets.chomp.downcase
-#     if answer[0] == "y"
-#       return true
-#     elsif answer[0] == "n"
-#       return false
-#     end
-#     puts "That is not a valid answer!"
-#   end
-# end
+
 
 class Blackjack
   def initialize(games: 1)
@@ -32,12 +20,25 @@ def run
   end
 end
 
+def get_hit_or_stand
+  # loop until you get a good answer and return
+  while true
+    print "Please enter (h)it or (s)tand: "
+    answer = gets.chomp.downcase
+    if answer[0] == "h"
+      return true
+    elsif answer[0] == "s"
+      return false
+    end
+    puts "That is not a valid answer!"
+  end
+end
+
 def total_cards (card1, card2, total)
   if (card1 === :J) ||
      (card1 === :Q) ||
      (card1 === :K)
      card1 = 10
-
   elsif (card1 === :A) && (total < 11)
     card1 = 11
   elsif (card1 === :A) && (total > 10)
@@ -55,21 +56,28 @@ def total_cards (card1, card2, total)
   card1 + card2
 end
 
+def player_hits
+
+end
+
 
 def run_game
   puts @hand
   @hand.deal
   player_card_1 = @hand.player_cards[0].rank
   player_card_2 = @hand.player_cards[1].rank
-# TODO - add logic to total cards that aren't numbers
-  # total = player_card_1.to_i + player_card_2.to_i
   total = total_cards(player_card_1, player_card_2, 0)
 
+  puts "Hello and welcome to the game of blackjack! Let's begin."
+  puts "You have $#{@cash} and bet $10."
+  puts "You have a #{player_card_1} and a #{player_card_2} in your hand. Your total is #{total}."
+  puts "Do you want to (h)it or (s)tand?"
 
-puts "Hello and welcome to the game of blackjack! Let's begin."
-# puts "You have $#{cash} and bet $10."
-puts "You have a #{player_card_1} and a #{player_card_2} in your hand. Your total is #{total}."
-# Do you want to (h)it or (s)tand? H
+  answer = get_hit_or_stand
+
+  if answer = true
+    @hand.player_hits
+  end
 #
 # You hit. You now have a 9, 8, and 4 in your hand. Your total is 19.
 # Do you want to (h)it or (s)tand? S

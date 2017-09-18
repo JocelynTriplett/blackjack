@@ -6,10 +6,10 @@ class Hand
   def initialize
     @player_cards = []
     @dealer_cards = []
+    @deck = Deck.new.shuffle
   end
 
   def deal
-    @deck = Deck.new.shuffle
     card1 = @deck.shift
     @player_cards.push(card1)
     card2 = @deck.shift
@@ -21,4 +21,12 @@ class Hand
     puts "player cards: " + @player_cards.to_s
     puts "dealer cards: " + @dealer_cards.to_s
   end
+
+  def player_hits
+    card5 = @deck.shift
+    @player_cards.push(card5)
+    puts "player cards: " + @player_cards.to_s
+
+  end
+
 end
