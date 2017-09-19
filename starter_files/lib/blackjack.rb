@@ -12,6 +12,7 @@ class Blackjack
     @games = games
     @cash = 100
     @total = 0
+    @games_won = 0
   end
 
 def run
@@ -68,18 +69,41 @@ def make_bet
   puts "You have $#{@cash} and bet $10."
 end
 
+def play_again
+  puts "Do you want to play again?"
+  # loop until you get a good answer and return
+  # while true
+    print "Please enter (y)es or (n)o: "
+    answer = gets.chomp.downcase
+    if answer[0] == "y"
+      run_game
+    elsif answer[0] == "n"
+      cash_left = @cash - 100
+      puts "Thanks for playing! You won #{@games_won} games and #{cash_left} dollars"
+    else
+      puts "That is not a valid answer!"
+    end
+  # end
+end
+
 def win_or_lose
   if (@total === 21)
-    puts "you win!"
+    @cash = @cash + 10
+    puts "You win!"
+    puts "You have $#{@cash} left."
+    play_again
   elsif @total > 21
-    puts "you lose!"
+    @cash = @cash - 10
+    puts "You lose!"
+    puts "You have $#{@cash} left."
+    play_again
   elsif @total < 21
     puts "What is going on here???"
     answer = hit_or_stand
     if answer === true
       player_hits
     else
-      puts "what did the dealer get?"
+      puts "What did the dealer get?"
     end
   end
 end
