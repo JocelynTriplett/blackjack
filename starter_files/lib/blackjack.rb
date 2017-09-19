@@ -33,46 +33,23 @@ def get_hit_or_stand
   end
 end
 
-def total_cards (card1, card2, total)
-  if (card1 === :J) ||
-     (card1 === :Q) ||
-     (card1 === :K)
-     card1 = 10
-  elsif (card1 === :A) && (total < 11)
-    card1 = 11
-  elsif (card1 === :A) && (total > 10)
-    card1 = 1
-  end
-  if (card2 === :J) ||
-     (card2 === :Q) ||
-     (card2 === :K)
-     card2 = 10
-  elsif (card2 === :A) && (total < 11)
-    card2 = 11
-  elsif (card2 === :A) && (total > 10)
-    card1 = 1
-  end
-  card1 + card2
-end
-
 def get_total(cards)
+  #TODO - code if more than one :A
   @card_values = cards.map { |card| card.rank  }
-  puts @card_values
-  @card_values.map! { |value| (value === :J || value === :Q || value === :K ? 10 : value) } 
-  # @card_values.map do |value|
-  #   if (value === :J) ||
-  #      (value === :Q) ||
-  #      (value === :K)
-  #      value = 10
-  #   end
-  # end
-  puts @card_values
+  @card_values.map! { |value| (value === :J || value === :Q || value === :K ? 10 : value) }
+# if the hand includes an Ace
   if @card_values.include?(:A)
-    @card_values.delete(:A)
-    if @card_values.inject(&:+) < 11
-      @card_values.inject(&:+) + 11
+    @card_values.delete_at(@card_values.find_index(:A))
+# if the hand includes another Ace
+    if @card_values.include?(:A)
+      @card_values.delete_at(@card_values.find_index(:A))
+      @card_values.push(1)
     else
-      @card_values.inject(&:+) + 1
+      if @card_values.inject(&:+) < 11
+        @card_values.inject(&:+) + 11
+      else
+        @card_values.inject(&:+) + 1
+      end
     end
   else
     @card_values.inject(&:+)
@@ -95,6 +72,18 @@ def run_game
 
   if answer == true
     @hand.player_hits
+    player_card_3 = @hand.player_cards[2].rank
+    total = get_total(@hand.player_cards)
+    puts "You have a #{player_card_1}, a #{player_card_2} and a #{player_card_3} in your hand. Your total is #{total}."
+    puts "Do you want to (h)it or (s)tand?"
+    answer = get_hit_or_stand
+    if answer == true
+      @hand.player_hits
+      player_card_4 = @hand.player_cards[3].rank
+      total = get_total(@hand.player_cards)
+      puts "You have a #{player_card_1}, a #{player_card_2}, a #{player_card_3} and a #{player_card_3} in your hand. Your total is #{total}."
+      puts "Do you want to (h)it or (s)tand?"
+    end
   end
 #
 # You hit. You now have a 9, 8, and 4 in your hand. Your total is 19.
