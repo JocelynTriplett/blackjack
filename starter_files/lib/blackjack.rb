@@ -68,19 +68,26 @@ def make_bet
   puts "You have $#{@cash} and bet $10."
 end
 
-def player_hits
-  @hand.deal_player
-  report_values
+def win_or_lose
   if (@total === 21)
     puts "you win!"
   elsif @total > 21
     puts "you lose!"
-  else @total < 21
-    if hit_or_stand === true
+  elsif @total < 21
+    puts "What is going on here???"
+    answer = hit_or_stand
+    if answer === true
       player_hits
-    else "what did the dealer get?"
+    else
+      puts "what did the dealer get?"
     end
   end
+end
+
+def player_hits
+  @hand.deal_player
+  report_values
+  win_or_lose
 end
 
 def run_game
@@ -95,10 +102,6 @@ puts "Hello and welcome to the game of blackjack! Let's begin."
 
   if hit_or_stand === true
     player_hits
-
-  if hit_or_stand == true
-    player_hits
-    end
   end
 #
 # You hit. You now have a 9, 8, and 4 in your hand. Your total is 19.
