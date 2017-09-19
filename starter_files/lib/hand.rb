@@ -10,23 +10,20 @@ class Hand
   end
 
   def deal
-    card1 = @deck.shift
-    @player_cards.push(card1)
-    card2 = @deck.shift
-    @dealer_cards.push(card2)
-    card3 = @deck.shift
-    @player_cards.push(card3)
-    card4 = @deck.shift
-    @dealer_cards.push(card4)
-    puts "player cards: " + @player_cards.to_s
-    puts "dealer cards: " + @dealer_cards.to_s
+    2.times{deal_player}
+    2.times{deal_dealer}
   end
 
-  def player_hits
-    card5 = @deck.shift
-    @player_cards.push(card5)
+  def deal_player
+    card = @deck.shift
+    @player_cards.push(card)
     puts "player cards: " + @player_cards.to_s
+  end
 
+  def deal_dealer
+    card = @deck.shift
+    @dealer_cards.push(card)
+    puts "dealer cards: " + @dealer_cards.to_s
   end
 
 end

@@ -19,7 +19,8 @@ def run
   end
 end
 
-def get_hit_or_stand
+def hit_or_stand
+  puts "Do you want to (h)it or (s)tand?"
   # loop until you get a good answer and return
   while true
     print "Please enter (h)it or (s)tand: "
@@ -34,7 +35,6 @@ def get_hit_or_stand
 end
 
 def get_total(cards)
-  #TODO - code if more than one :A
   @card_values = cards.map { |card| card.rank  }
   @card_values.map! { |value| (value === :J || value === :Q || value === :K ? 10 : value) }
 # if the hand includes an Ace
@@ -56,39 +56,37 @@ def get_total(cards)
   end
 end
 
+def report_values
+  total = get_total(@hand.player_cards)
+  last_card = @hand.player_cards.last
+  other_cards = @hand.player_cards.reverse.drop(1).reverse.map { |card| card.rank  }.join(", a ")
+  puts "you have a #{other_cards} and a #{last_card.rank} in your hand. Your total is #{total}."
+end
+
+def make_bet
+  puts "You have $#{@cash} and bet $10."
+end
+
+def player_hits
+  @hand.deal_player
+  report_values
+end
+
 def run_game
+# Begin game
+puts "Hello and welcome to the game of blackjack! Let's begin."
   puts @hand
   @hand.deal
-  player_card_1 = @hand.player_cards[0].rank
-  player_card_2 = @hand.player_cards[1].rank
-  total = get_total(@hand.player_cards)
+  make_bet
+  report_values
 
-  puts "Hello and welcome to the game of blackjack! Let's begin."
-  puts "You have $#{@cash} and bet $10."
-  puts "You have a #{player_card_1} and a #{player_card_2} in your hand. Your total is #{total}."
-  puts "Do you want to (h)it or (s)tand?"
+  # Begin hit_or_stand loops
 
-  answer = get_hit_or_stand
+  if hit_or_stand === true
+    player_hits
 
-  if answer == true
-    @hand.player_hits
-    # player_card_3 = @hand.player_cards[2].rank
-    total = get_total(@hand.player_cards)
-    last_card = @hand.player_cards.last
-    puts last_card
-    other_cards = @hand.player_cards.reverse.drop(1).reverse.map { |card| card.rank  }.join(", a ")
-
-    puts "you have a #{other_cards} and a #{last_card.rank} in your hand. Your total is #{total}."
-
-    # puts "You have a #{player_card_1}, a #{player_card_2} and a #{player_card_3} in your hand. Your total is #{total}."
-    puts "Do you want to (h)it or (s)tand?"
-    answer = get_hit_or_stand
-    if answer == true
-      @hand.player_hits
-      player_card_4 = @hand.player_cards[3].rank
-      total = get_total(@hand.player_cards)
-      puts "You have a #{player_card_1}, a #{player_card_2}, a #{player_card_3} and a #{player_card_3} in your hand. Your total is #{total}."
-      puts "Do you want to (h)it or (s)tand?"
+  if hit_or_stand == true
+    player_hits
     end
   end
 #
