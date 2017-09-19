@@ -72,9 +72,15 @@ def run_game
 
   if answer == true
     @hand.player_hits
-    player_card_3 = @hand.player_cards[2].rank
+    # player_card_3 = @hand.player_cards[2].rank
     total = get_total(@hand.player_cards)
-    puts "You have a #{player_card_1}, a #{player_card_2} and a #{player_card_3} in your hand. Your total is #{total}."
+    last_card = @hand.player_cards.last
+    puts last_card
+    other_cards = @hand.player_cards.reverse.drop(1).reverse.map { |card| card.rank  }.join(", a ")
+
+    puts "you have a #{other_cards} and a #{last_card.rank} in your hand. Your total is #{total}."
+
+    # puts "You have a #{player_card_1}, a #{player_card_2} and a #{player_card_3} in your hand. Your total is #{total}."
     puts "Do you want to (h)it or (s)tand?"
     answer = get_hit_or_stand
     if answer == true
