@@ -13,7 +13,6 @@ class Blackjack
     @cash = 100
   end
 
-
 def run
   @games.times do
     run_game
@@ -56,17 +55,36 @@ def total_cards (card1, card2, total)
   card1 + card2
 end
 
-def player_hits
-
+def get_total(cards)
+  @card_values = cards.map { |card| card.rank  }
+  puts @card_values
+  @card_values.map! { |value| (value === :J || value === :Q || value === :K ? 10 : value) } 
+  # @card_values.map do |value|
+  #   if (value === :J) ||
+  #      (value === :Q) ||
+  #      (value === :K)
+  #      value = 10
+  #   end
+  # end
+  puts @card_values
+  if @card_values.include?(:A)
+    @card_values.delete(:A)
+    if @card_values.inject(&:+) < 11
+      @card_values.inject(&:+) + 11
+    else
+      @card_values.inject(&:+) + 1
+    end
+  else
+    @card_values.inject(&:+)
+  end
 end
-
 
 def run_game
   puts @hand
   @hand.deal
   player_card_1 = @hand.player_cards[0].rank
   player_card_2 = @hand.player_cards[1].rank
-  total = total_cards(player_card_1, player_card_2, 0)
+  total = get_total(@hand.player_cards)
 
   puts "Hello and welcome to the game of blackjack! Let's begin."
   puts "You have $#{@cash} and bet $10."
@@ -75,7 +93,7 @@ def run_game
 
   answer = get_hit_or_stand
 
-  if answer = true
+  if answer == true
     @hand.player_hits
   end
 #
