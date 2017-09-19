@@ -11,6 +11,7 @@ class Blackjack
     @hand = Hand.new
     @games = games
     @cash = 100
+    @total = 0
   end
 
 def run
@@ -57,10 +58,10 @@ def get_total(cards)
 end
 
 def report_values
-  total = get_total(@hand.player_cards)
+  @total = get_total(@hand.player_cards)
   last_card = @hand.player_cards.last
   other_cards = @hand.player_cards.reverse.drop(1).reverse.map { |card| card.rank  }.join(", a ")
-  puts "you have a #{other_cards} and a #{last_card.rank} in your hand. Your total is #{total}."
+  puts "you have a #{other_cards} and a #{last_card.rank} in your hand. Your total is #{@total}."
 end
 
 def make_bet
@@ -70,6 +71,16 @@ end
 def player_hits
   @hand.deal_player
   report_values
+  if (@total === 21)
+    puts "you win!"
+  elsif @total > 21
+    puts "you lose!"
+  else @total < 21
+    if hit_or_stand === true
+      player_hits
+    else "what did the dealer get?"
+    end
+  end
 end
 
 def run_game
