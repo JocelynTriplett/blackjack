@@ -4,8 +4,6 @@ require_relative "deck"
 require_relative "card"
 require_relative "hand"
 
-
-
 class Blackjack
   def initialize(games: 1)
     @hand = Hand.new
@@ -71,19 +69,23 @@ end
 
 def play_again
   puts "Do you want to play again?"
-  # loop until you get a good answer and return
-  # while true
+  while true
     print "Please enter (y)es or (n)o: "
     answer = gets.chomp.downcase
     if answer[0] == "y"
       run_game
     elsif answer[0] == "n"
-      cash_left = @cash - 100
-      puts "Thanks for playing! You won #{@games_won} games and #{cash_left} dollars"
+      quit_game
+      return false
     else
       puts "That is not a valid answer!"
     end
-  # end
+  end
+end
+
+def quit_game
+  cash_left = @cash - 100
+  puts "Thanks for playing! You won #{@games_won} games and #{cash_left} dollars"
 end
 
 def win_or_lose
@@ -117,7 +119,7 @@ end
 def run_game
 # Begin game
 puts "Hello and welcome to the game of blackjack! Let's begin."
-  puts @hand
+  @hand = Hand.new
   @hand.deal
   make_bet
   report_values
