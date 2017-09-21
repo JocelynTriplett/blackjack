@@ -113,22 +113,26 @@ def win_or_lose
     if answer === true
       player_hits
     else
-      report_values(@hand.dealer_cards)
-      dealer_total = get_total(@hand.dealer_cards)
-      player_total = get_total(@hand.player_cards)
-      puts "Your total is #{player_total} the dealer has #{dealer_total}."
-      if player_total >= dealer_total
-        @cash = @cash + 10
-        puts "You win"
-        puts "You have $#{@cash} left."
-        play_again
-      else
-        @cash = @cash - 10
-        puts "You lose"
-        puts "You have $#{@cash} left."
-        play_again
-      end
+      player_stands
     end
+  end
+end
+
+def player_stands
+  report_values(@hand.dealer_cards)
+  dealer_total = get_total(@hand.dealer_cards)
+  player_total = get_total(@hand.player_cards)
+  puts "Your total is #{player_total} the dealer has #{dealer_total}."
+  if player_total >= dealer_total
+    @cash = @cash + 10
+    puts "You win"
+    puts "You have $#{@cash} left."
+    play_again
+  else
+    @cash = @cash - 10
+    puts "You lose"
+    puts "You have $#{@cash} left."
+    play_again
   end
 end
 
@@ -149,11 +153,10 @@ puts "Hello and welcome to the game of blackjack! Let's begin."
 
   if hit_or_stand === true
     player_hits
+  else
+    player_stands
   end
 
-  if hit_or_stand === false
-
-  end
 end
 end
 
