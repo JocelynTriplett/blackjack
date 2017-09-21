@@ -1,4 +1,5 @@
-puts "TODO Implement the game of blackjack."
+# puts "TODO Implement the game of blackjack."
+# TODO - if player runs out of money
 
 require_relative "deck"
 require_relative "card"
@@ -15,20 +16,21 @@ class Blackjack
 
 def run
   @games.times do
-    run_game
+    begin_game
   end
 end
 
 def hit_or_stand
   puts "Do you want to (h)it or (s)tand?"
-  # loop until you get a good answer and return
   while true
     print "Please enter (h)it or (s)tand: "
     answer = gets.chomp.downcase
     if answer[0] == "h"
-      return true
+      # return true
+      player_hits
     elsif answer[0] == "s"
-      return false
+      # return false
+      player_stands
     end
     puts "That is not a valid answer!"
   end
@@ -109,12 +111,13 @@ def win_or_lose
     puts "You have $#{@cash} left."
     play_again
   elsif @total < 21
-    answer = hit_or_stand
-    if answer === true
-      player_hits
-    else
-      player_stands
-    end
+    hit_or_stand
+    # answer = hit_or_stand
+    # if answer === true
+    #   player_hits
+    # else
+    #   player_stands
+    # end
   end
 end
 
@@ -142,22 +145,24 @@ def player_hits
   win_or_lose
 end
 
-def run_game
-# Begin game
-puts "Hello and welcome to the game of blackjack! Let's begin."
+def begin_game
+  puts "Hello and welcome to the game of blackjack! Let's begin."
+  run_game
+end
 
+def run_game
   @hand = Hand.new
   @hand.deal
   make_bet
   report_values(@hand.player_cards)
-
-  if hit_or_stand === true
-    player_hits
-  else
-    player_stands
-  end
-
+  hit_or_stand
+  # if hit_or_stand === true
+  #   player_hits
+  # else
+  #   player_stands
+  # end
 end
+
 end
 
 Blackjack.new.run
