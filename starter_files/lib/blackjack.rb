@@ -44,6 +44,11 @@ def get_total(cards)
     if @card_values.include?(:A)
       @card_values.delete_at(@card_values.find_index(:A))
       @card_values.push(1)
+      if @card_values.inject(&:+) < 11
+        @card_values.inject(&:+) + 11
+      else
+        @card_values.inject(&:+) + 1
+      end
     else
       if @card_values.inject(&:+) < 11
         @card_values.inject(&:+) + 11
@@ -56,11 +61,15 @@ def get_total(cards)
   end
 end
 
-def report_values
-  @total = get_total(@hand.player_cards)
-  last_card = @hand.player_cards.last
-  other_cards = @hand.player_cards.reverse.drop(1).reverse.map { |card| card.rank  }.join(", a ")
-  puts "you have a #{other_cards} and a #{last_card.rank} in your hand. Your total is #{@total}."
+def report_values(hand)
+  @total = get_total(hand)
+  last_card = hand.last
+  other_cards = hand.reverse.drop(1).reverse.map { |card| card.rank  }.join(", a ")
+  if hand === @hand.player_cards
+    puts "You have a #{other_cards} and a #{last_card.rank} in your hand. Your total is #{@total}."
+  else
+    puts "The dealer has a #{other_cards} and a #{last_card.rank} in their hand. Their total is #{@total}."
+  end
 end
 
 def make_bet
@@ -100,19 +109,32 @@ def win_or_lose
     puts "You have $#{@cash} left."
     play_again
   elsif @total < 21
-    puts "What is going on here???"
     answer = hit_or_stand
     if answer === true
       player_hits
     else
-      puts "What did the dealer get?"
+      report_values(@hand.dealer_cards)
+      dealer_total = get_total(@hand.dealer_cards)
+      player_total = get_total(@hand.player_cards)
+      puts "Your total is #{player_total} the dealer has #{dealer_total}."
+      if player_total >= dealer_total
+        @cash = @cash + 10
+        puts "You win"
+        puts "You have $#{@cash} left."
+        play_again
+      else
+        @cash = @cash - 10
+        puts "You lose"
+        puts "You have $#{@cash} left."
+        play_again
+      end
     end
   end
 end
 
 def player_hits
   @hand.deal_player
-  report_values
+  report_values(@hand.player_cards)
   win_or_lose
 end
 
@@ -123,10 +145,14 @@ puts "Hello and welcome to the game of blackjack! Let's begin."
   @hand = Hand.new
   @hand.deal
   make_bet
-  report_values
+  report_values(@hand.player_cards)
 
   if hit_or_stand === true
     player_hits
+  end
+
+  if hit_or_stand === false
+
   end
 end
 end
