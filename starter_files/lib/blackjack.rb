@@ -1,5 +1,6 @@
 # puts "TODO Implement the game of blackjack."
 # TODO - if player runs out of money
+# TODO - "not a valid response" after player quits
 
 require_relative "deck"
 require_relative "card"
@@ -26,11 +27,11 @@ def hit_or_stand
     print "Please enter (h)it or (s)tand: "
     answer = gets.chomp.downcase
     if answer[0] == "h"
-      # return true
       player_hits
+      return false
     elsif answer[0] == "s"
-      # return false
       player_stands
+      return false
     end
     puts "That is not a valid answer!"
   end
@@ -69,6 +70,7 @@ def report_values(hand)
   other_cards = hand.reverse.drop(1).reverse.map { |card| card.rank  }.join(", a ")
   if hand === @hand.player_cards
     puts "You have a #{other_cards} and a #{last_card.rank} in your hand. Your total is #{@total}."
+    puts "The dealer has a #{@hand.dealer_cards[0].rank} and one other card."
   else
     puts "The dealer has a #{other_cards} and a #{last_card.rank} in their hand. Their total is #{@total}."
   end
@@ -97,6 +99,7 @@ end
 def quit_game
   cash_left = @cash - 100
   puts "Thanks for playing! You won #{@games_won} games and #{cash_left} dollars"
+  return false
 end
 
 def win_or_lose
@@ -112,12 +115,6 @@ def win_or_lose
     play_again
   elsif @total < 21
     hit_or_stand
-    # answer = hit_or_stand
-    # if answer === true
-    #   player_hits
-    # else
-    #   player_stands
-    # end
   end
 end
 
@@ -156,11 +153,6 @@ def run_game
   make_bet
   report_values(@hand.player_cards)
   hit_or_stand
-  # if hit_or_stand === true
-  #   player_hits
-  # else
-  #   player_stands
-  # end
 end
 
 end
