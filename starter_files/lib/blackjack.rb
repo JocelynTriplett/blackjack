@@ -137,7 +137,7 @@ def player_stands
 end
 
 def player_hits
-  @hand.deal_player
+  @hand.deal_card(@hand.player_cards)
   report_values(@hand.player_cards)
   win_or_lose
 end
