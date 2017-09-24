@@ -2,9 +2,9 @@
 # TODO - if player runs out of money
 # TODO - "not a valid response" after player quits
 
-require_relative "deck"
-require_relative "card"
-require_relative "hand"
+require_relative "../lib/deck"
+require_relative "../lib/card"
+require_relative "../lib/hand"
 
 class Blackjack
   def initialize
@@ -33,6 +33,13 @@ def hit_or_stand
     puts "That is not a valid answer!"
   end
 end
+def add_ace
+  if @card_values.inject(&:+) < 11
+    @card_values.inject(&:+) + 11
+  else
+    @card_values.inject(&:+) + 1
+  end
+end
 
 def get_total(cards)
   @card_values = cards.map { |card| card.rank  }
@@ -44,17 +51,9 @@ def get_total(cards)
     if @card_values.include?(:A)
       @card_values.delete_at(@card_values.find_index(:A))
       @card_values.push(1)
-      if @card_values.inject(&:+) < 11
-        @card_values.inject(&:+) + 11
-      else
-        @card_values.inject(&:+) + 1
-      end
+      add_ace
     else
-      if @card_values.inject(&:+) < 11
-        @card_values.inject(&:+) + 11
-      else
-        @card_values.inject(&:+) + 1
-      end
+      add_ace
     end
   else
     @card_values.inject(&:+)
@@ -67,7 +66,10 @@ def report_values(hand)
   other_cards = hand.reverse.drop(1).reverse.map { |card| card.rank  }.join(", a ")
   if hand === @hand.player_cards
     puts "You have a #{other_cards} and a #{last_card.rank} in your hand. Your total is #{@total}."
-    puts "The dealer has a #{@hand.dealer_cards[0].rank} and one other card."
+    puts "The dealer has a #{@hand.dealer_cards[0].rank} and one hidden card."
+    if @total === 21
+      win_or_lose
+    end
   else
     puts "The dealer has a #{other_cards} and a #{last_card.rank} in their hand. Their total is #{@total}."
   end
@@ -79,24 +81,31 @@ end
 
 def play_again
   puts "Do you want to play again?"
-  while true
-    print "Please enter (y)es or (n)o: "
-    answer = gets.chomp.downcase
-    if answer[0] == "y"
-      run_game
-    elsif answer[0] == "n"
-      quit_game
-      return false
-    else
-      puts "That is not a valid answer!"
-    end
+  print "Please enter (y)es or (n)o: "
+  answer = gets.chomp.downcase
+  if answer[0] == "y"
+    run_game
+    # return false
+  elsif answer[0] == "n"
+    quit_game
+    # return false
+  else
+    puts "That is not a valid answer!"
+    play_again
   end
 end
 
 def quit_game
   cash_left = @cash - 100
   puts "Thanks for playing! You won #{@games_won} games and #{cash_left} dollars"
-  return false
+  exit
+end
+
+def end_hand
+  hidden_card = @hand.dealer_cards.last.rank
+  puts "The dealer's hidden card was a #{hidden_card}"
+  puts "You now have $#{@cash}."
+  play_again
 end
 
 def win_or_lose
@@ -104,13 +113,11 @@ def win_or_lose
     @cash = @cash + 10
     @games_won = @games_won + 1
     puts "You win!"
-    puts "You have $#{@cash} left."
-    play_again
+    end_hand
   elsif @total > 21
     @cash = @cash - 10
     puts "You lose!"
-    puts "You have $#{@cash} left."
-    play_again
+    end_hand
   elsif @total < 21
     hit_or_stand
   end
@@ -120,8 +127,19 @@ def player_stands
   report_values(@hand.dealer_cards)
   dealer_total = get_total(@hand.dealer_cards)
   player_total = get_total(@hand.player_cards)
-  puts "Your total is #{player_total} the dealer has #{dealer_total}."
-  if player_total >= dealer_total
+  # puts "Your total is #{player_total} the dealer has #{dealer_total}."
+  while dealer_total < 17
+    @hand.deal_card(@hand.dealer_cards)
+    last_card = @hand.dealer_cards.last.rank
+    puts "The dealer draws a #{last_card}."
+    # report_values(@hand.dealer_cards)
+    dealer_total = get_total(@hand.dealer_cards)
+    puts "Their total is now #{dealer_total}."
+  end
+  if dealer_total > 21
+    puts "dealer busts!"
+  end
+  if player_total >= dealer_total || dealer_total > 21
     @cash = @cash + 10
     @games_won = @games_won + 1
     puts "You win"
@@ -137,6 +155,8 @@ end
 
 def player_hits
   @hand.deal_card(@hand.player_cards)
+  last_card = @hand.player_cards.last.rank
+  puts "The dealer deals you a #{last_card}"
   report_values(@hand.player_cards)
   win_or_lose
 end
