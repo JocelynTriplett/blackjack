@@ -7,18 +7,15 @@ require_relative "card"
 require_relative "hand"
 
 class Blackjack
-  def initialize(games: 1)
+  def initialize
     @hand = Hand.new
-    @games = games
     @cash = 100
     @total = 0
     @games_won = 0
   end
 
 def run
-  @games.times do
-    begin_game
-  end
+  begin_game
 end
 
 def hit_or_stand
