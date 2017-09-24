@@ -105,6 +105,7 @@ end
 def win_or_lose
   if (@total === 21)
     @cash = @cash + 10
+    @games_won = @games_won + 1
     puts "You win!"
     puts "You have $#{@cash} left."
     play_again
@@ -125,6 +126,7 @@ def player_stands
   puts "Your total is #{player_total} the dealer has #{dealer_total}."
   if player_total >= dealer_total
     @cash = @cash + 10
+    @games_won = @games_won + 1
     puts "You win"
     puts "You have $#{@cash} left."
     play_again
