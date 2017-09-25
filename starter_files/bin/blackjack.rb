@@ -97,10 +97,7 @@ class Blackjack
 
   def win_or_lose
     if (@total === 21)
-      @cash = @cash + 10
-      @hands_won = @hands_won + 1
-      puts "You win!"
-      end_hand
+      player_stands
     elsif @total > 21
       @cash = @cash - 10
       puts "You lose!"
@@ -127,11 +124,17 @@ class Blackjack
       speak_slower
       puts "dealer busts!"
     end
-    if player_total >= dealer_total || dealer_total > 21
+    if player_total > dealer_total || dealer_total > 21
       @cash = @cash + 10
       @hands_won = @hands_won + 1
       speak_slower
       puts "You win!"
+      speak_slower
+      puts "You have $#{@cash} left."
+      play_again
+    elsif player_total == dealer_total && dealer_total < 22
+      speak_slower
+      puts "It's a stand-off!"
       speak_slower
       puts "You have $#{@cash} left."
       play_again
