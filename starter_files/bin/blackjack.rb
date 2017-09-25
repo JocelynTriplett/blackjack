@@ -11,7 +11,7 @@ class Blackjack
     @hand = Hand.new
     @cash = 100
     @total = 0
-    @games_won = 0
+    @hands_won = 0
   end
 
   def run
@@ -38,8 +38,6 @@ class Blackjack
       puts "That is not a valid answer!"
     end
   end
-
-
 
   def report_values(hand)
     @total = @hand.get_total(hand)
@@ -84,7 +82,7 @@ class Blackjack
   def quit_game
     cash_left = @cash - 100
     speak_slower
-    puts "Thanks for playing! You won #{@games_won} games and $#{cash_left}."
+    puts "Thanks for playing! You won #{@hands_won} hands and $#{cash_left}."
     exit
   end
 
@@ -100,7 +98,7 @@ class Blackjack
   def win_or_lose
     if (@total === 21)
       @cash = @cash + 10
-      @games_won = @games_won + 1
+      @hands_won = @hands_won + 1
       puts "You win!"
       end_hand
     elsif @total > 21
@@ -131,7 +129,7 @@ class Blackjack
     end
     if player_total >= dealer_total || dealer_total > 21
       @cash = @cash + 10
-      @games_won = @games_won + 1
+      @hands_won = @hands_won + 1
       speak_slower
       puts "You win!"
       speak_slower
